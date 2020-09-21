@@ -1,4 +1,4 @@
-from REST import dnac
+from REST_DNAC import dnac
 
 
 def help_me():
@@ -16,4 +16,5 @@ def network_health():
     gresponse_distribution = f'You have a total of {nhd["totalCount"]} distribution switches, with a {nhd["healthScore"]}% of health \n'
     nhr = nh['healthDistirubution'][2] 
     gresponse_router = f'You have a total of {nhr["totalCount"]} routers, with a {nhr["healthScore"]}% of health'
+    return gresponse_total + gresponse_access + gresponse_distribution + gresponse_router
 
