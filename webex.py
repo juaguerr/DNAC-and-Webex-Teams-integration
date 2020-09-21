@@ -1,14 +1,13 @@
-import requests
-import json
 from flask import Flask
 from flask import request
-from pprint import pprint
+import requests
+import json
 import get
-import pathlib
 
-roomId='Y2lzY29zcGFyazovL3VzL1JPT00vNThmM2QwMmUtNzc4ZS0zOWUyLWIzOTctZmZjODA0ZDBmZGRl'
-auth_bot_token='NDM5ZDkzZmUtMzA1NS00OGIyLThlMWUtMjliNzVjZTU0YWJkMGExOWEyZTctMjdj_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f'
-webhook_url='https://dnacbot.ngrok.io'
+
+roomId='YOUR_ROOM_ID'
+auth_bot_token='YOUR_BOT_AOTH_TOKEN'
+webhook_url='YOUR_WEBHOOK_URL'
 webhook_name='Webhook'
 
 headers = {
@@ -24,8 +23,7 @@ webhook_ini = {
   "event": "created",
   "filter": "roomId="+roomId
 }
-
-    
+""" Functions for GET & POST data in Webex Teams """    
 def rest_get(url):
     response = requests.get(url, headers = headers)
     return response
@@ -35,7 +33,7 @@ def rest_post(url, data):
     request = requests.post(url, json.dumps(data), headers=headers)
     return request
 
-
+""" Webhook creation. Will check if there is any Webhook created with the same Webhook URL, if yes it will skip the creation process """    
 webhook_created = rest_get('https://api.ciscospark.com/v1/webhooks')
 if range(len(webhook_created.json()['items'])) != range(0,0):
     for i in range(len(webhook_created.json()['items'])):
@@ -47,12 +45,7 @@ else:
     webhook_creation = rest_post('https://api.ciscospark.com/v1/webhooks', webhook_ini)
 
 
-def help_me():
-    return "I can help. Below are the commands that I understand:\n" \
-           "`Help` - I will display what I can do. \n" \
-           "`Status` - I will display your DNAC Status \n"
-    
-
+""" Creating the Web request"""    
 app = Flask(__name__)
 @app.route('/', methods=['POST'])
 def dnacbot():
@@ -64,7 +57,7 @@ def dnacbot():
             message = message.json()['text']
             message = message.lower()
             if message == 'help':
-                reply_message = help_me()
+                reply_message = get.help_me()
             elif message == "status":
                 reply_message = get.network_health()
             else:
